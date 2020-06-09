@@ -64,15 +64,15 @@ int Llama<T, LN_SIZE>::size() { return m_numData; }
 template <class T, int LN_SIZE>
 void Llama<T, LN_SIZE>::dump() {
 	const int MAX_DATA = size();
-	LlamaNode<T, LN_SIZE>* curr_node = &GetCurrentNode();
-	T* curr_data = &GetTop();
+	LlamaNode<T, LN_SIZE>* curr_node = m_current_node;
+	T* curr_data = m_top;
 
 	cout << "***** Llama Stack Dump ******" << endl;
 	cout << "LN_SIZE = " << LN_SIZE << endl;
 	cout << "# of items in the stack = " << MAX_DATA << endl;
-	GetCurrentNode()->report();
+	m_current_node->report();
 
-	if (*m_head == *GetCurrentNode()) {
+	if (m_head == m_current_node) {
 		cout << "This stack does not have an extra node" << endl;
 	}
 	else {
@@ -80,7 +80,7 @@ void Llama<T, LN_SIZE>::dump() {
 	}
 
 	cout << "Stack contents, top to bottom" << endl;
-	cout << "----- " << *curr_node << " -----" << endl;
+	cout << "----- " << curr_node << " -----" << endl;
 
 	while (*curr_data != m_tail->arr[LN_SIZE - 1]) {
 		
@@ -89,7 +89,7 @@ void Llama<T, LN_SIZE>::dump() {
 		// last item in current node
 		if (curr_data == &curr_node->arr[LN_SIZE - 1]) {
 			curr_node = curr_node->m_next;
-			cout << "----- " << *curr_node << " -----" << endl;
+			cout << "----- " << curr_node << " -----" << endl;
 			curr_data = &curr_node->arr[0];
 		}
 
@@ -105,11 +105,12 @@ void Llama<T, LN_SIZE>::dump() {
 
 template <class T, int LN_SIZE>
 void Llama<T, LN_SIZE>::push(const T& data) {
+	T cpy_data = data;
 	// if the list is full
 	if (IsFull()) {
 
 		// if there's no empty node in the stack
-		if (*m_current_node == *m_head) {
+		if (m_current_node == m_head) {
 
 			// creates a new node using m_curr_node
 			m_current_node = nullptr; 
@@ -126,14 +127,14 @@ void Llama<T, LN_SIZE>::push(const T& data) {
 
 			// m_top points and sets the last element to the data given
 			SetTop(m_head->arr[LN_SIZE - 1]);
-			SetTop(data);
+			SetTop(cpy_data);
 		}
 
 		// empty node exists
 		else {
 			// m_top points and sets the first element to the data given 
 			SetTop(m_head->arr[LN_SIZE - 1]);
-			SetTop(data);
+			SetTop(cpy_data);
 
 			// move m_current_node to m_head 
 			m_current_node = m_head;
@@ -145,12 +146,12 @@ void Llama<T, LN_SIZE>::push(const T& data) {
 
 		// very first item in stack
 		if (m_bottom) {
-			SetTop(data);
+			SetTop(cpy_data);
 			m_bottom = false;
 		}
 		else {
-			SetTop(--m_top);
-			SetTop(data);
+			SetTop(*--m_top);
+			SetTop(cpy_data);
 		}
 	}
 
@@ -159,18 +160,18 @@ void Llama<T, LN_SIZE>::push(const T& data) {
 
 template <class T, int LN_SIZE>
 T Llama<T, LN_SIZE>::pop() {
-	T val = GetTop();
+	T val = *m_top;
 	unsigned int curr_index = 0;
 
 	// the stack does not exist
 	if (m_numNodes == 0) {
-		throw(LlamaUnderflow);
+		throw LlamaUnderflow("Current stack does not exist");
+		
 	}
 
 	// top is located at the very last element 
 	// of the stack
-	else if (GetTop() == &m_tail->arr[LN_SIZE - 1]) {
-		SetTop(NULL);
+	else if (m_top == &m_tail->arr[LN_SIZE - 1]) {
 
 		// all data is earsed entire stack is deleted 
 		delete m_tail;
@@ -182,12 +183,10 @@ T Llama<T, LN_SIZE>::pop() {
 
 	// top is located at the last
 	// element of the current node
-	else if (GetTop() == m_current_node->arr[LN_SIZE - 1]) {
+	else if (m_top == &m_current_node->arr[LN_SIZE - 1]) {
 
 		m_current_node = m_current_node->m_next;
 
-		// seting current value to null
-		SetTop(NULL);
 
 		// top points to new array
 		SetTop(m_current_node->arr[0]);	
@@ -195,15 +194,14 @@ T Llama<T, LN_SIZE>::pop() {
 
 	// default case
 	else {
-		SetTop(NULL);
-		SetTop(++m_top);
+		SetTop(*++m_top);
 	}
 
 	SetNumData(--m_numData);
 	curr_index = m_numData % LN_SIZE;
 
 	// removes empty node if needed 
-	if (curr_index <= (LN_SIZE / 2) && *m_current_node != *m_head) {
+	if (curr_index <= (LN_SIZE / 2) && m_current_node != m_head) {
 		delete m_head;
 		m_head = nullptr;
 		m_head = m_current_node;
@@ -220,7 +218,7 @@ void Llama<T, LN_SIZE>::dup() {
 	if (size() == 0) { throw(LlamaUnderflow); }
 	
 	// deep copy top value
-	T val = *GetTop();
+	T val = *m_top;
 	push(val);
 }
 
@@ -230,14 +228,14 @@ void Llama<T, LN_SIZE>::swap() {
 	int index = size() % LN_SIZE;
 
 	LlamaNode<T, LN_SIZE>* nextNode = nullptr;
-	T* firstVal = &GetTop(), * secondVal = nullptr; 
+	T* firstVal = m_top, * secondVal = nullptr; 
 	T firstCpy = *firstVal, secondCpy = NULL; 
 
 	if (size() < MIN_DATA) { throw(LlamaUnderflow); }
 
 	// top is at last element of current array 
 	if(index == 1){
-		nextNode = GetCurrentNode()->m_next;
+		nextNode = m_current_node->m_next;
 
 		// points to first element of second node
 		secondVal = &nextNode->arr[0];
@@ -247,7 +245,7 @@ void Llama<T, LN_SIZE>::swap() {
 	// default case: both values are next to eachother in stack
 	else {
 		// initalize the value next to top
-		secondVal = &GetTop()++;
+		secondVal = m_top++;
 	}
 
 	// deep copy second value
@@ -267,7 +265,7 @@ void Llama<T, LN_SIZE>::rot() {
 	ONE_VAL = 1, TWO_VAL = 2;
 
 	LlamaNode<T, LN_SIZE>* nextNode = nullptr;
-	T* firstVal = &GetTop(), * secondVal = &GetTop();
+	T* firstVal = m_top, * secondVal = m_top;
 	T firstCpy = *firstVal, secondCpy = NULL;
 
 	// Stack does not have enough items to swap 
@@ -278,13 +276,13 @@ void Llama<T, LN_SIZE>::rot() {
 
 	// current node contains one element 
 	case ONE_VAL:
-		nextNode = GetCurrentNode()->m_next;
+		nextNode = m_current_node->m_next;
 		secondVal = &nextNode->arr[ONE_VAL];
 		break;
 
 	// current node contains two elements 
 	case TWO_VAL:
-		nextNode = GetCurrentNode()->m_next;
+		nextNode = m_current_node->m_next;
 		secondVal = &nextNode->arr[0];
 		break;
 
@@ -306,14 +304,14 @@ void Llama<T, LN_SIZE>::rot() {
 
 template <class T, int LN_SIZE>
 T Llama<T, LN_SIZE>::peek(int offset) const {
-	const int MAX_DATA = size();
+	const int MAX_DATA = m_numData;
 	unsigned int i = 0;
-	LlamaNode<T, LN_SIZE>* curr_node = &GetCurrentNode();
-	T* curr_data = &GetTop();
+	LlamaNode<T, LN_SIZE>* curr_node = m_current_node;
+	T* curr_data = m_top;
 	T val;
 
 	if (offset >= MAX_DATA || offset < 0) {
-		throw(LlamaUnderflow);
+		throw LlamaUnderflow("Cannot access current value");
 	}
 	
 	while (i != offset) {
