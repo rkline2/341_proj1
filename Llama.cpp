@@ -22,15 +22,18 @@ using namespace std;
 // The Node's data is automatically set to an initial T value
 template <class T, int LN_SIZE>
 Llama<T, LN_SIZE>::Llama() {
-	m_head = new LlamaNode<T, LN_SIZE>;
+	m_head = new LlamaNode<T, LN_SIZE>();
 	m_bottom = true;
 
 	m_numNodes = 1;
 	m_numData = 0;
 
-	SetTop(m_head->arr[LN_SIZE - 1]);
+	m_top = *m_head->arr[LN_SIZE - 1];
+	//SetTop(m_head->arr[LN_SIZE - 1]);
 	m_tail = m_head;
 	m_current_node = m_head;
+	
+	//okay
 }
 
 // Name: Copy Constructor 
