@@ -13,8 +13,8 @@
 using namespace std ;
 
 #include "Llama.h"
-#include "OvCoInt.h"
-
+//#include "OvCoInt.h"
+/*
 int main() {
 
    Llama<OvCoInt,9> S ;
@@ -83,3 +83,4 @@ int main() {
 
    return 0 ;
 }
+*/

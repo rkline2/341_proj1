@@ -139,7 +139,7 @@ private:
     }
 
     void Copy_Arr(const LlamaNode<T, LN_SIZE>& source, LlamaNode<T, LN_SIZE>& copy, const int& total_source_data, const int& total_num_nodes) {
-        unsigned int i = LN_SIZE - 1;
+        int i = LN_SIZE - 1;
         // Tests if the last element from the source is in this node  
 
         int last_index = (total_source_data - (LN_SIZE * (total_num_nodes - GetNumNodes()))) - 1;
@@ -165,8 +165,9 @@ private:
         }
     }
     bool IsFull() {
-        int x = m_numData - (LN_SIZE * (m_numNodes - 1));
-        if (x == LN_SIZE || x == 0) { return true; }
+        if (m_top == &m_current_node->arr[0]) {
+	  return true;
+	}
         return false;
 
     }

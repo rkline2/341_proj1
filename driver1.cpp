@@ -13,7 +13,7 @@
 using namespace std ;
 
 #include "Llama.h"
-
+/*
 int main() {
 
    Llama<string,4> S ;
@@ -32,9 +32,10 @@ int main() {
 
    S.push("def") ;
    S.push("abc") ;
+   
    S.dump() ;
 
-
+   
    cerr << "\n***** Dump using peek *****" ;
    int size = S.size() ;
    cerr << "\nsize = " << size << endl ;
@@ -42,7 +43,8 @@ int main() {
    for (int i=0 ; i < S.size() ; i++) {
       cerr << i << ": " << S.peek(i) << endl ;
    }
-
+   
+   
 
    // Pop some strings off
    string s1 ; 
@@ -56,7 +58,7 @@ int main() {
    cerr << "popped " << s1 << endl ;
 
    S.dump() ;  // should have "extra" node
-
+   
 
    cerr << "\n***** Push Test *****\n" ;
    S.push("x789") ;
@@ -64,7 +66,7 @@ int main() {
    S.push("x123") ;
 
    S.dump() ;  // should use extra node
-
+   
 
    cerr << "\n***** Pop Test *****\n" ;
    s1 = S.pop() ;
@@ -82,7 +84,8 @@ int main() {
    cerr << "popped " << s1 << endl ;
 
    S.dump() ;  // extra node should be gone
-
+   
 
    return 0 ;
 }
+*/

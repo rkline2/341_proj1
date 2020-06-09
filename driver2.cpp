@@ -47,16 +47,15 @@ int main() {
 
    S.swap() ;
    S.dump() ;   
-
+   
    S.push(10.123) ; 
 
    S.rot() ;
    S.dump() ;
-
+   
    S.swap() ;
    S.dump() ;
-
-
+   /*
    // Testing assignment and copy constructor
    //
    Llama<float,8> T(S) ;
@@ -83,6 +82,6 @@ int main() {
    cerr << "============================\n" ;
    cerr << "Orginal stack S has: \n" ;
    S.dump() ;
-
+   */
    return 0 ;
 }
