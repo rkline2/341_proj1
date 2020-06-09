@@ -22,18 +22,15 @@ using namespace std;
 // The Node's data is automatically set to an initial T value
 template <class T, int LN_SIZE>
 Llama<T, LN_SIZE>::Llama() {
-	m_head = new LlamaNode<T, LN_SIZE>();
+	m_head = new LlamaNode<T, LN_SIZE>;
 	m_bottom = true;
 
 	m_numNodes = 1;
 	m_numData = 0;
 
-	m_top = *m_head->arr[LN_SIZE - 1];
-	//SetTop(m_head->arr[LN_SIZE - 1]);
+	m_top = &m_head->arr[LN_SIZE - 1];
 	m_tail = m_head;
 	m_current_node = m_head;
-	
-	//okay
 }
 
 // Name: Copy Constructor 
@@ -69,7 +66,6 @@ void Llama<T, LN_SIZE>::dump() {
 	const int MAX_DATA = size();
 	LlamaNode<T, LN_SIZE>* curr_node = m_current_node;
 	T* curr_data = m_top;
-
 	cout << "***** Llama Stack Dump ******" << endl;
 	cout << "LN_SIZE = " << LN_SIZE << endl;
 	cout << "# of items in the stack = " << MAX_DATA << endl;
@@ -85,7 +81,7 @@ void Llama<T, LN_SIZE>::dump() {
 	cout << "Stack contents, top to bottom" << endl;
 	cout << "----- " << curr_node << " -----" << endl;
 
-	while (*curr_data != m_tail->arr[LN_SIZE - 1]) {
+	while (curr_data != &m_tail->arr[LN_SIZE - 1]) {
 		
 		cout << *curr_data << endl;
 
@@ -136,7 +132,7 @@ void Llama<T, LN_SIZE>::push(const T& data) {
 		// empty node exists
 		else {
 			// m_top points and sets the first element to the data given 
-			SetTop(m_head->arr[LN_SIZE - 1]);
+			m_top = &m_head->arr[LN_SIZE - 1];
 			SetTop(cpy_data);
 
 			// move m_current_node to m_head 
@@ -150,6 +146,7 @@ void Llama<T, LN_SIZE>::push(const T& data) {
 		// very first item in stack
 		if (m_bottom) {
 			SetTop(cpy_data);
+
 			m_bottom = false;
 		}
 		else {
