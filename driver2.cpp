@@ -13,7 +13,7 @@
 using namespace std ;
 
 #include "Llama.h"
-/*
+
 int main() {
 
    Llama<float,8> S ;
@@ -74,7 +74,7 @@ int main() {
    Llama<float,8> U ;
 
    U = S ;
-   
+   U.pop();
    U.push(11.234) ;
    cerr << "============================\n" ;
    cerr << "Copied stack U has: \n" ;
@@ -85,4 +85,4 @@ int main() {
    
    return 0 ;
 }
-*/
+
