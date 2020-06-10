@@ -72,10 +72,10 @@ void Llama<T, LN_SIZE>::dump() {
 	m_current_node->report();
 
 	if (m_head == m_current_node) {
-		cout << "This stack does not have an extra node" << endl;
+	  cout << "\nThis stack does not have an extra node" << endl << endl;
 	}
 	else {
-	  cout << "This stack does have an extra node: "<< m_head << endl;
+	  cout << "\nThis stack does have an extra node: "<< m_head << endl << endl;
 	}
 
 	cout << "Stack contents, top to bottom" << endl;

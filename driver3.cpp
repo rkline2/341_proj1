@@ -13,7 +13,7 @@
 using namespace std ;
 
 #include "Llama.h"
-//#include "OvCoInt.h"
+#include "OvCoInt.h"
 /*
 int main() {
 
@@ -34,16 +34,16 @@ int main() {
 
    S.swap() ;
    S.dump() ;   
-
+   
    S.push(10) ; 
 
    S.rot() ;
    S.dump() ;
-
+   
    S.swap() ;
    S.dump() ;
 
-
+   
    // Testing assignment and copy constructor
    //
 
@@ -51,7 +51,7 @@ int main() {
 
    cerr << "\nCreating new Llama Stack of OvCoInt T using S\n" ;
    Llama<OvCoInt,9> T(S) ;
-
+   
    answer = T.pop() ;
    answer = T.pop() ;
    cerr << "============================\n" ;
@@ -60,8 +60,8 @@ int main() {
    cerr << "============================\n" ;
    cerr << "Orginal stack S has: \n" ;
    S.dump() ;
-
-
+   
+   
    cerr << "\nCreating new Llama Stack of OvCoInt U\n" ;
    Llama<OvCoInt,9> U ;
 
@@ -80,7 +80,8 @@ int main() {
    cerr << "============================\n" ;
    cerr << "After modifying U, orginal stack S has: \n" ;
    S.dump() ;
-
+   
    return 0 ;
 }
+
 */

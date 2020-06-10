@@ -13,7 +13,7 @@
 using namespace std ;
 
 #include "Llama.h"
-
+/*
 int main() {
 
    Llama<float,8> S ;
@@ -85,4 +85,4 @@ int main() {
    
    return 0 ;
 }
-
+*/
