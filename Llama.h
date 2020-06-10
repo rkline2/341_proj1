@@ -98,7 +98,7 @@ private:
             SetNumNodes(++m_numNodes);
 
             // Copy the array in the node 
-            Copy_Arr(*source_curr, *m_head, source.m_numData, source.m_numNodes);
+            Copy_Arr(*source_curr, *m_head, source);
 
             // have m_tail point to the last node in the stack (m_head)
             m_tail = m_head;
@@ -119,7 +119,7 @@ private:
             SetNumNodes(++m_numNodes);
 
             // Copy the array in the node 
-            Copy_Arr(*source_curr, *curr_cpy, source.m_numData, source.m_numNodes);
+            Copy_Arr(*source_curr, *curr_cpy, source);
 
 
             // have m_next point to the new node  
@@ -138,30 +138,35 @@ private:
 
     }
 
-    void Copy_Arr(const LlamaNode<T, LN_SIZE>& source, LlamaNode<T, LN_SIZE>& copy, const int& total_source_data, const int& total_num_nodes) {
+  void Copy_Arr(const LlamaNode<T, LN_SIZE>& source, LlamaNode<T, LN_SIZE>& copy, const Llama<T, LN_SIZE>& sourceStack) {
         int i = LN_SIZE - 1;
         // Tests if the last element from the source is in this node  
 
-        int last_index = (total_source_data - (LN_SIZE * (total_num_nodes - GetNumNodes()))) - 1;
+        //int last_index = (total_source_data - (LN_SIZE * (total_num_nodes - GetNumNodes()))) - 1;
         while (i >= 0) {
             // tests if the last element is found 
-            if (i == last_index) {
-                copy.arr[i] = source.arr[i];
+            if (sourceStack.m_top == &source.arr[i]) {
+	      // Set the values
+	      copy.arr[i] = source.arr[i];
 
-                // Set the current node of the stack
-                SetCurrentNode(copy);
+              // Set the current node of the stack
+	      m_current_node = &copy;
+	      
+              // Set the top of the stack
+	      m_top = &copy.arr[i];
 
-                // Set the top of the stack
-                SetTop(copy.arr[i]);
-
-                SetNumData(++m_numData);
-                break;
+	      // top is found so stack is not empty
+	      m_bottom = false;
+		
+              SetNumData(++m_numData);
+              i = 0;
             }
             else {
                 copy.arr[i] = source.arr[i];
                 SetNumData(++m_numData);
-                i--;
+               
             }
+	    i--;
         }
     }
     bool IsFull() {

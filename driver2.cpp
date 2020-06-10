@@ -13,7 +13,7 @@
 using namespace std ;
 
 #include "Llama.h"
-
+/*
 int main() {
 
    Llama<float,8> S ;
@@ -55,11 +55,11 @@ int main() {
    
    S.swap() ;
    S.dump() ;
-   /*
+   
    // Testing assignment and copy constructor
    //
    Llama<float,8> T(S) ;
-
+ 
    
    T.pop() ;
    T.pop() ;
@@ -69,12 +69,12 @@ int main() {
    cerr << "============================\n" ;
    cerr << "Orginal stack S has: \n" ;
    S.dump() ;
-
-
+   
+   
    Llama<float,8> U ;
 
    U = S ;
-   U.pop() ;
+   
    U.push(11.234) ;
    cerr << "============================\n" ;
    cerr << "Copied stack U has: \n" ;
@@ -82,6 +82,7 @@ int main() {
    cerr << "============================\n" ;
    cerr << "Orginal stack S has: \n" ;
    S.dump() ;
-   */
+   
    return 0 ;
 }
+*/
