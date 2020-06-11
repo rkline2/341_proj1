@@ -33,7 +33,9 @@ Llama<T, LN_SIZE>::Llama() {
 	m_numNodes = 1;
 	m_numData = 0;
 
+	
 	m_top = &m_head->arr[LN_SIZE - 1];
+	
 	m_tail = m_head;
 	m_current_node = m_head;
 }
@@ -130,54 +132,57 @@ template <class T, int LN_SIZE>
 void Llama<T, LN_SIZE>::push(const T& data) {
 	T cpy_data = data;
 
-	// if the list is full
-	if (IsFull()) {
-		// if there's no empty node in the stack
-		if (m_current_node == m_head) {
-			// creates a new node using m_curr_node
-			m_current_node = nullptr;
-			m_current_node = new LlamaNode<T, LN_SIZE>();
+	// size of array must contain at least 1 item
+	if (LN_SIZE > 0) {
+		// if the list is full
+		if (IsFull()) {
+			// if there's no empty node in the stack
+			if (m_current_node == m_head) {
+				// creates a new node using m_curr_node
+				m_current_node = nullptr;
+				m_current_node = new LlamaNode<T, LN_SIZE>();
 
-			// increment number of nodes 
-			SetNumNodes(++m_numNodes);
+				// increment number of nodes 
+				SetNumNodes(++m_numNodes);
 
-			m_current_node->m_next = m_head;
+				m_current_node->m_next = m_head;
 
-			// move m_head to the new node
-			m_head = m_current_node;
+				// move m_head to the new node
+				m_head = m_current_node;
 
-			// m_top points and sets the last element to the data given
-			m_top = &m_head->arr[LN_SIZE - 1];
-			SetTop(cpy_data);
+				// m_top points and sets the last element to the data given
+				m_top = &m_head->arr[LN_SIZE - 1];
+				SetTop(cpy_data);
 
+			}
+
+			// empty node exists
+			else {
+				// m_top points and sets the first element to the data given 
+				m_top = &m_head->arr[LN_SIZE - 1];
+				SetTop(cpy_data);
+
+				// move m_current_node to m_head 
+				m_current_node = m_head;
+			}
 		}
 
-		// empty node exists
+		// default push 
 		else {
-			// m_top points and sets the first element to the data given 
-			m_top = &m_head->arr[LN_SIZE - 1];
-			SetTop(cpy_data);
 
-			// move m_current_node to m_head 
-			m_current_node = m_head;
+			// very first item in stack
+			if (m_bottom) {
+				SetTop(cpy_data);
+
+				m_bottom = false;
+			}
+			else {
+				SetTop(*--m_top);
+				SetTop(cpy_data);
+			}
 		}
+		SetNumData(++m_numData);
 	}
-
-	// default push 
-	else {
-
-		// very first item in stack
-		if (m_bottom) {
-			SetTop(cpy_data);
-
-			m_bottom = false;
-		}
-		else {
-			SetTop(*--m_top);
-			SetTop(cpy_data);
-		}
-	}
-	SetNumData(++m_numData);
 }
 
 // Name: pop
@@ -270,7 +275,7 @@ void Llama<T, LN_SIZE>::swap() {
 	T* firstVal = m_top, * secondVal = nullptr;
 	T firstCpy = *firstVal, secondCpy;
 
-	if (size() < MIN_DATA) { throw LlamaUnderflow("Cannot swap items"); }
+	if (size() < MIN_DATA || m_numNodes == 0) { throw LlamaUnderflow("Cannot swap items"); }
 
 	// top is at last element of current array 
 	if (m_top == &m_current_node->arr[LN_SIZE - 1]) {
@@ -310,7 +315,7 @@ void Llama<T, LN_SIZE>::rot() {
 	T firstCpy = *firstVal, secondCpy, thirdCpy;
 
 	// Stack does not have enough items to swap 
-	if (size() < MIN_DATA || m_numNodes == 0) { throw LlamaUnderflow("Not enough items to swap"); }
+	if (size() < MIN_DATA || m_numNodes == 0 || size() == 0) { throw LlamaUnderflow("Not enough items to swap"); }
 
 	
 	// Special case: Size of the array is 1
@@ -382,7 +387,7 @@ T Llama<T, LN_SIZE>::peek(int offset) const {
 	T* curr_data = m_top;
 	T val;
 
-	if (offset >= MAX_DATA || offset < 0) {
+	if (offset >= MAX_DATA || offset < 0 || m_numNodes == 0) {
 		throw LlamaUnderflow("Cannot access current value");
 	}
 	
