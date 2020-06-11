@@ -84,7 +84,7 @@ public:
     // Pre-Conditions: Source stack exists  
     // Post-Conditions: returns and sets the top item in the stack
     T* GetTop() { 
-        if (m_numData == 0) {throw LlamaUnderflow("There are no items in the stack")}
+        if (m_numData == 0) { throw LlamaUnderflow("There are no items in the stack"); }
         return m_top; 
     }
     void SetTop(T& source) { *m_top = source; }
