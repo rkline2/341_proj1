@@ -197,12 +197,20 @@ T Llama<T, LN_SIZE>::pop() {
 	SetNumData(--m_numData);
 	curr_index = m_numData % LN_SIZE;
 
-	// removes empty node if needed 
-	if ((curr_index <= (LN_SIZE / 2)) && (m_current_node != m_head) && curr_index != 0) {
+	// default case: removes empty node if needed 
+	if ((curr_index <= (LN_SIZE / 2)) && (m_current_node != m_head) && (curr_index != 0)) {
 		delete m_head;
 		m_head = nullptr;
 		m_head = m_current_node;
 		SetNumNodes(--m_numNodes);
+	}
+	
+	// special case: LN_SIZE == 1
+	else if(LN_SIZE == 1 && m_head != m_current_node){
+	  delete m_head;
+	  m_head = nullptr;
+	  m_head = m_current_node;
+	  SetNumNodes(--m_numNodes);
 	}
 
 
