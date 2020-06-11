@@ -83,7 +83,10 @@ public:
     // the top item of the stack 
     // Pre-Conditions: Source stack exists  
     // Post-Conditions: returns and sets the top item in the stack
-    T* GetTop() { return m_top; }
+    T* GetTop() { 
+        if (m_numData == 0) {throw LlamaUnderflow("There are no items in the stack")}
+        return m_top; 
+    }
     void SetTop(T& source) { *m_top = source; }
 
     // Name: m_current_node Accessor and Mutator
@@ -136,7 +139,7 @@ private:
 
             // increments the number of nodes in the stack by 1
             SetNumNodes(++m_numNodes);
-	    
+
             // Copy the array in the node 
             Copy_Arr(*source_curr, *curr_cpy, source);
 
@@ -179,18 +182,18 @@ private:
 
                 // Set the top of the stack
                 m_top = &copy.arr[i];
-		
-		if(&sourceStack.m_tail->arr[LN_SIZE - 1] != &source.arr[i]){
-                // top is found so stack is not empty
-                m_bottom = false;
 
-                SetNumData(++m_numData);
-		}
-		
-		else{
-		  m_bottom = true;
-		}
-		i = 0;
+                if (&sourceStack.m_tail->arr[LN_SIZE - 1] != &source.arr[i]) {
+                    // top is found so stack is not empty
+                    m_bottom = false;
+
+                    SetNumData(++m_numData);
+                }
+
+                else {
+                    m_bottom = true;
+                }
+                i = 0;
             }
             else {
                 copy.arr[i] = source.arr[i];
