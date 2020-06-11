@@ -107,9 +107,8 @@ private:
     // Post-Conditions: returns a deep copy of the 
     // source stack to the new stack
     void Copy_Stack(const Llama<T, LN_SIZE>& source) {
-        m_head = nullptr;
         LlamaNode<T, LN_SIZE>* source_curr = source.m_head;
-        LlamaNode<T, LN_SIZE>* prev_cpy = m_head, * curr_cpy = m_head;
+        LlamaNode<T, LN_SIZE>* prev_cpy = nullptr, * curr_cpy = nullptr;
 
         // creates m_head if the source is not a empty LL
         if (source_curr != nullptr) {
@@ -137,6 +136,7 @@ private:
 
             // increments the number of nodes in the stack by 1
             SetNumNodes(++m_numNodes);
+	    
             // Copy the array in the node 
             Copy_Arr(*source_curr, *curr_cpy, source);
 
@@ -179,12 +179,18 @@ private:
 
                 // Set the top of the stack
                 m_top = &copy.arr[i];
-
+		
+		if(&sourceStack.m_tail->arr[LN_SIZE - 1] != &source.arr[i]){
                 // top is found so stack is not empty
                 m_bottom = false;
 
                 SetNumData(++m_numData);
-                i = 0;
+		}
+		
+		else{
+		  m_bottom = true;
+		}
+		i = 0;
             }
             else {
                 copy.arr[i] = source.arr[i];
@@ -209,13 +215,13 @@ private:
 
     }
 
-    unsigned int m_numData; // number of items in the stack
-    unsigned int m_numNodes; // number of nodes in the stack
+    unsigned int m_numData = 0; // number of items in the stack
+    unsigned int m_numNodes = 0; // number of nodes in the stack
     T* m_top; // top item in the stack
-    LlamaNode<T, LN_SIZE>* m_head; // head node
-    LlamaNode<T, LN_SIZE>* m_current_node; // current node in the stack
-    LlamaNode<T, LN_SIZE>* m_tail; // last node in the stack
-    bool m_bottom; // very last item in the stack exists
+    LlamaNode<T, LN_SIZE>* m_head = nullptr; // head node
+    LlamaNode<T, LN_SIZE>* m_current_node = nullptr; // current node in the stack
+    LlamaNode<T, LN_SIZE>* m_tail = nullptr; // last node in the stack
+    bool m_bottom = true; // very last item in the stack exists
 };
 
 

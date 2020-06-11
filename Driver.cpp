@@ -20,7 +20,7 @@ using namespace std;
 
 
 int main() {
-	/*****change LN_SIZE here*****/
+	// change LN_SIZE here
 	const int SIZE = 10;
 	int num_items = 0;
 	string usrResponce;
@@ -40,7 +40,7 @@ int main() {
 
 	cout << "Generating stack of items 0-" << num_items - 1 <<"..." << endl;
 
-	for (unsigned int i = 0; i < num_items; i++) {
+	for (int i = 0; i < num_items; i++) {
 		stack_1->push(i);
 	}
 
@@ -71,8 +71,17 @@ int main() {
 	cout << "Test 3: pop()" << endl;
 	cout << "How many items do you want to pop stack_1?: ";
 	cin >> num_items;
-	for (int i = 0; i < num_items; i++) 
-		stack_1->pop();
+	for (int i = 0; i < num_items; i++){
+	  try{
+	    stack_1->pop();
+	  }
+	  catch (LlamaUnderflow &e){
+	    cerr << "*****\n";
+	    cerr << "Llama Stack error: " << e.what() << endl;
+	    cerr << "*****\n";
+	    break;
+	  }
+	}
 	
 	cout << endl << "------Displaying stack_1 & stack_2------" << endl;
 	
@@ -88,8 +97,17 @@ int main() {
 	cout << "Test 4: swap()" << endl;
 	cout << "------Swapping stack_2------" << endl;
 	cout << "**Before swap:**" << endl;
-	stack_2->dump(); stack_2->swap();
+	stack_2->dump();
+	try{
+	  stack_2->swap();
+	}
+	catch(LlamaUnderflow &e){
+	  cerr << "*****\n";
+	  cerr << "Llama Stack error: " << e.what() << endl;
+	  cerr << "*****\n";
+	 
 
+	}
 	cout << "**After swap:**" << endl;
 	stack_2->dump();
 
@@ -101,8 +119,15 @@ int main() {
 	cout << "Test 5: rot()" << endl;
 	cout << "------Rotating stack_1------" << endl;
 	cout << "**Before rotate:**" << endl;
-	stack_1->dump(); stack_1->rot();
-
+	stack_1->dump();
+	try{
+	  stack_1->rot();
+	}
+	catch(LlamaUnderflow &e){
+	  cerr << "*****\n";
+	  cerr << "Llama Stack error: " << e.what() << endl;
+	  cerr << "*****\n";
+	}
 	cout << "**After rotate:**" << endl;
 	stack_1->dump();
 
@@ -114,8 +139,17 @@ int main() {
 	cout << "Test 6: dup()" << endl;
 	cout << "How many times do you want to duplicate stack_2?: ";
 	cin >> num_items;
-	for (int i = 0; i < num_items; i++)
-		stack_2->dup();
+	for (int i = 0; i < num_items; i++){
+	  try{
+	    stack_2->dup();
+	  }
+	  catch(LlamaUnderflow &e){
+	    cerr << "*****\n";
+	    cerr << "Llama Stack error: " << e.what() << endl;
+	    cerr << "*****\n";
+	    break;
+	  }
+	}
 
 	cout << "------displaying stack_2------" << endl;
 	stack_2->dump();
@@ -141,12 +175,26 @@ int main() {
 
 	// Test 8: Top Item && peek()
 	cout << "Test 8: Top && peek(0)" << endl;
-	cout << "stack_1 top: " << *stack_1->GetTop() << " memory: "<< stack_1->GetTop() << endl;
-	cout << "stack_1 peek(0): " << stack_1->peek(0) << stack_1->peek(0)<<endl;
+	cout << "stack_1 top: " << *stack_1->GetTop() << " memory: " << stack_1->GetTop() << endl;
+	try{
+	  cout << "stack_1 peek(0): " << stack_1->peek(0) << endl;
+	}
+	catch (LlamaUnderflow &e){
+	  cerr << "*****\n";
+	  cerr << "Llama Stack error: " << e.what() << endl;
+	  cerr << "*****\n";
+	}
 
 	cout << "stack_2 top: " << *stack_2->GetTop() << " memory: " << stack_2->GetTop() << endl;
-	cout << "stack_2 peek(0): " << stack_2->peek(0) << endl;
-
+	try{
+	  cout << "stack_2 peek(0): " << stack_2->peek(0) << endl;
+	}
+	catch (LlamaUnderflow &e){
+	  cerr << "*****\n";
+	  cerr << "Llama Stack error: " << e.what() << endl;
+	  cerr << "*****\n";
+	}
+	
 	cout << "Enter any value to continue: ";
 	cin >> usrResponce;
 	cout << endl;
@@ -159,3 +207,4 @@ int main() {
 	cout << "Run Valgrind for any memory leaks" << endl;
 	return 0;
 }
+
