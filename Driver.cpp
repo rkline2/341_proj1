@@ -5,8 +5,12 @@
 ** Date:    6/11/20
 ** Section: 01
 ** E-mail:  rkline2@umbc.edu
-**
-**
+** 
+** The file Driver.cpp contains a total 
+** of nine tests. Each tests will implement 
+** one of the public functions such as push(),
+** pop(), etc. The user will be able to control the size 
+** of the stack, how many pushes, popps to implement.
 **
 ***********************************************/
 
