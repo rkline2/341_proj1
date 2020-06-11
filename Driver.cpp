@@ -29,7 +29,6 @@ int main() {
 	cout << "Enter any value to continue: ";
 	cin >> usrResponce;
 	cout << endl;
-
 	// Test 1: Push function
 	cout << "Test 1: Push()" << endl;
 	Llama<int, SIZE>* stack_1 = new Llama<int, SIZE>;
