@@ -8,13 +8,18 @@
 ** Section: 01
 ** E-mail:  rkline2@umbc.edu
 **
-**
+** The Llama.cpp contains the majority of the
+** functions that will manipulate an array of data.
+** Some of these functions include pop, push, swap, etc.
+** The functions will create and keep track of having 
+** the correct number of nodes with the help of private
+** member functions in Llama.h.
 **
 ***********************************************/
 
 #include <iostream>
 #include "Llama.h"
-using namespace std; 
+using namespace std;
 
 
 // Name: Default Constructor
@@ -22,7 +27,7 @@ using namespace std;
 // The Node's data is automatically set to an initial T value
 template <class T, int LN_SIZE>
 Llama<T, LN_SIZE>::Llama() {
-	m_head = new LlamaNode<T, LN_SIZE>;
+	m_head = new LlamaNode<T, LN_SIZE>();
 	m_bottom = true;
 
 	m_numNodes = 1;
@@ -47,20 +52,25 @@ Llama<T, LN_SIZE>::Llama(const Llama<T, LN_SIZE>& source) {
 // Removes all nodes and data created in a stack 
 template <class T, int LN_SIZE>
 Llama<T, LN_SIZE>::~Llama() {
-	LlamaNode<T, LN_SIZE>* curr = m_head, *prev = m_head;
+	LlamaNode<T, LN_SIZE>* curr = m_head, * prev = m_head;
 	while (curr != nullptr) {
 		prev = curr;
 		curr = curr->m_next;
 
-		delete prev; 
+		delete prev;
 		prev = nullptr;
 	}
 
 }
 
+// Name: size
+// Returns the number of items in the stack 
 template <class T, int LN_SIZE>
 int Llama<T, LN_SIZE>::size() { return m_numData; }
 
+// Name: dump
+// Displays the items, number of items, number of nodes 
+// in the stack
 template <class T, int LN_SIZE>
 void Llama<T, LN_SIZE>::dump() {
 	const int MAX_DATA = size();
@@ -72,17 +82,17 @@ void Llama<T, LN_SIZE>::dump() {
 	m_current_node->report();
 
 	if (m_head == m_current_node) {
-	  cout << "\nThis stack does not have an extra node" << endl << endl;
+		cout << "\nThis stack does not have an extra node" << endl << endl;
 	}
 	else {
-	  cout << "\nThis stack does have an extra node: "<< m_head << endl << endl;
+		cout << "\nThis stack does have an extra node: " << m_head << endl << endl;
 	}
 
 	cout << "Stack contents, top to bottom" << endl;
 	cout << "----- " << curr_node << " -----" << endl;
 
 	while (curr_data != &m_tail->arr[LN_SIZE - 1]) {
-		
+
 		cout << *curr_data << endl;
 
 		// last item in current node
@@ -96,22 +106,25 @@ void Llama<T, LN_SIZE>::dump() {
 		else {
 			curr_data++;
 		}
-		
+
 	}
 	cout << *curr_data << endl;
 	cout << "----- bottom of stack -----" << endl << endl;
 	cout << "*****************************" << endl;
 }
 
+// Name: push
+// Given a value, sets the item to the top of the stack
 template <class T, int LN_SIZE>
 void Llama<T, LN_SIZE>::push(const T& data) {
 	T cpy_data = data;
+
 	// if the list is full
 	if (IsFull()) {
-	  // if there's no empty node in the stack
-	  if (m_current_node == m_head) {
+		// if there's no empty node in the stack
+		if (m_current_node == m_head) {
 			// creates a new node using m_curr_node
-			m_current_node = nullptr; 
+			m_current_node = nullptr;
 			m_current_node = new LlamaNode<T, LN_SIZE>();
 
 			// increment number of nodes 
@@ -120,12 +133,12 @@ void Llama<T, LN_SIZE>::push(const T& data) {
 			m_current_node->m_next = m_head;
 
 			// move m_head to the new node
-			m_head = m_current_node; 
+			m_head = m_current_node;
 
 			// m_top points and sets the last element to the data given
 			m_top = &m_head->arr[LN_SIZE - 1];
 			SetTop(cpy_data);
-	  
+
 		}
 
 		// empty node exists
@@ -144,9 +157,9 @@ void Llama<T, LN_SIZE>::push(const T& data) {
 
 		// very first item in stack
 		if (m_bottom) {
-		  SetTop(cpy_data);
+			SetTop(cpy_data);
 
-		  m_bottom = false;
+			m_bottom = false;
 		}
 		else {
 			SetTop(*--m_top);
@@ -156,6 +169,9 @@ void Llama<T, LN_SIZE>::push(const T& data) {
 	SetNumData(++m_numData);
 }
 
+// Name: pop
+// Returns top item of the stack 
+// and sets the top to the next item in the stack
 template <class T, int LN_SIZE>
 T Llama<T, LN_SIZE>::pop() {
 	T val = *m_top;
@@ -164,81 +180,89 @@ T Llama<T, LN_SIZE>::pop() {
 	// the stack does not exist
 	if (m_numNodes == 0) {
 		throw LlamaUnderflow("Current stack is empty");
-		
+
 	}
 
 	// top is located at the very last element 
 	// of the stack
 	else if (m_top == &m_tail->arr[LN_SIZE - 1]) {
 
-	  // all data is earsed  
-	  m_top = &m_tail->arr[LN_SIZE - 1];
+		// all data is earsed  
+		m_top = &m_tail->arr[LN_SIZE - 1];
 
-	  m_bottom = true;
+		m_bottom = true;
 
-	  SetNumNodes(--m_numNodes);
+		SetNumNodes(--m_numNodes);
 	}
 
 	// top is located at the last
 	// element of the current node
 	else if (m_top == &m_current_node->arr[LN_SIZE - 1]) {
-	  
-	  m_current_node = m_current_node->m_next;
 
-	  // top points to new array
-	  m_top = &m_current_node->arr[0];	
+		m_current_node = m_current_node->m_next;
+
+		// top points to new array
+		m_top = &m_current_node->arr[0];
 	}
 
 	// default case
 	else {
-	  SetTop(*++m_top);
+		SetTop(*++m_top);
 	}
 
 	SetNumData(--m_numData);
 	curr_index = m_numData % LN_SIZE;
+	
+
 
 	// default case: removes empty node if needed 
-	if ((curr_index <= (LN_SIZE / 2)) && (m_current_node != m_head) && (curr_index != 0)) {
+	if ((curr_index <= (LN_SIZE / 2)) && (m_current_node != m_head) && (curr_index != 0) && (LN_SIZE != 1)) {
 		delete m_head;
 		m_head = nullptr;
 		m_head = m_current_node;
 		SetNumNodes(--m_numNodes);
 	}
-	
+
 	// special case: LN_SIZE == 1
-	else if(LN_SIZE == 1 && m_head != m_current_node){
-	  delete m_head;
-	  m_head = nullptr;
-	  m_head = m_current_node;
-	  SetNumNodes(--m_numNodes);
+	else if (LN_SIZE == 1 && m_head->m_next != m_current_node) {
+		LlamaNode<T, LN_SIZE>* curr = m_head;
+		m_head = m_head->m_next;
+		delete curr;
+		curr = nullptr;
+		SetNumNodes(--m_numNodes);
 	}
 
+	
 
 	return val;
 }
 
+// Name: dup
+// Duplicates the top item of the stack 
 template <class T, int LN_SIZE>
 void Llama<T, LN_SIZE>::dup() {
 	// stack is empty
-  if (size() == 0) { throw LlamaUnderflow("Current stack is empty"); }
-	
+	if (size() == 0) { throw LlamaUnderflow("Current stack is empty"); }
+
 	// deep copy top value
 	T val = *m_top;
 	push(val);
 }
 
+// Name: swap
+// Swaps the top two items in the stack
 template <class T, int LN_SIZE>
 void Llama<T, LN_SIZE>::swap() {
 	const int MIN_DATA = 2;
 	int index = size() % LN_SIZE;
 
 	LlamaNode<T, LN_SIZE>* nextNode = nullptr;
-	T* firstVal = m_top, * secondVal = nullptr; 
-	T firstCpy = *firstVal, secondCpy; 
+	T* firstVal = m_top, * secondVal = nullptr;
+	T firstCpy = *firstVal, secondCpy;
 
 	if (size() < MIN_DATA) { throw LlamaUnderflow("Cannot swap items"); }
 	// top is at last element of current array 
-	if(index == 1){
+	if (m_top == &m_current_node->arr[LN_SIZE - 1]) {
 		nextNode = m_current_node->m_next;
 
 		// points to first element of second node
@@ -258,14 +282,16 @@ void Llama<T, LN_SIZE>::swap() {
 	// swap the two values
 	*firstVal = secondCpy;
 	*secondVal = firstCpy;
-	
+
 	m_top = firstVal;
 }
 
+// Name: rot
+// Rotates the top three items in the stack
 template <class T, int LN_SIZE>
 void Llama<T, LN_SIZE>::rot() {
 	const int MIN_DATA = 3, CURR_INDEX = size() % LN_SIZE,
-	ONE_VAL = 1, TWO_VAL = 2;
+		ONE_VAL = 1, TWO_VAL = 2;
 
 	LlamaNode<T, LN_SIZE>* nextNode = nullptr;
 	T* firstVal = m_top, * secondVal = nullptr, * thirdVal = nullptr;
@@ -274,30 +300,47 @@ void Llama<T, LN_SIZE>::rot() {
 	// Stack does not have enough items to swap 
 	if (size() < MIN_DATA) { throw LlamaUnderflow("Not enough items to swap"); }
 
-	// Current stack does not contain at least three items 
-	switch(CURR_INDEX){
-
-	// current node contains one element 
-	case ONE_VAL:
+	// Special case: Size of the array is 1
+	if (LN_SIZE == 1) {
 		nextNode = m_current_node->m_next;
+
 		secondVal = &nextNode->arr[0];
-		thirdVal = &nextNode->arr[ONE_VAL];
-		break;
 
-	// current node contains two elements 
-	case TWO_VAL:
-		nextNode = m_current_node->m_next;
-		secondVal = &m_current_node->arr[LN_SIZE - 1];
+		nextNode = nextNode->m_next;
+
 		thirdVal = &nextNode->arr[0];
-		break;
+	
+	}
 
-	// current node contains at least three elements 
-	default:
-		for (int i = 0; i < TWO_VAL; i++) {
-		  secondVal = thirdVal;
-		  thirdVal++;
+	// default case
+	else {
+		// Current stack does not contain at least three items 
+		switch (CURR_INDEX) {
+
+			// current node contains one element 
+		case ONE_VAL:
+			nextNode = m_current_node->m_next;
+			secondVal = &nextNode->arr[0];
+			thirdVal = &nextNode->arr[ONE_VAL];
+			break;
+
+			// current node contains two elements 
+		case TWO_VAL:
+			nextNode = m_current_node->m_next;
+			secondVal = &m_current_node->arr[LN_SIZE - 1];
+			thirdVal = &nextNode->arr[0];
+			break;
+
+			// current node contains at least three elements 
+		default:
+			secondVal = firstVal;
+			thirdVal = firstVal;
+			for (int i = 0; i < TWO_VAL; i++) {
+				secondVal = thirdVal;
+				thirdVal++;
+			}
+			break;
 		}
-		break;
 	}
 
 	// deep copy for second value
@@ -314,6 +357,9 @@ void Llama<T, LN_SIZE>::rot() {
 	m_top = firstVal;
 }
 
+// Name: peek
+// Given an integer, returns the item located at 
+// the given integer
 template <class T, int LN_SIZE>
 T Llama<T, LN_SIZE>::peek(int offset) const {
 	const int MAX_DATA = m_numData;
@@ -325,7 +371,7 @@ T Llama<T, LN_SIZE>::peek(int offset) const {
 	if (offset >= MAX_DATA || offset < 0) {
 		throw LlamaUnderflow("Cannot access current value");
 	}
-	
+
 	while (i != offset) {
 		// last item in current node
 		if (curr_data == &curr_node->arr[LN_SIZE - 1]) {
@@ -344,6 +390,8 @@ T Llama<T, LN_SIZE>::peek(int offset) const {
 	return val;
 }
 
+// Name: Overloaded Assignment Operator
+// Given a stack, returns a deep copy of the given stack 
 template <class T, int LN_SIZE>
 const Llama<T, LN_SIZE>& Llama<T, LN_SIZE>::operator= (const Llama<T, LN_SIZE>& source) {
 	if (this != &source) {
