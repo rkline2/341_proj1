@@ -61,18 +61,39 @@ public:
     //
     // Add your public member functions & public data mebers here:
     //
+
+    // Name: m_numNodes Accessor and Mutator
+    // Description: These are helper functions that returns and sets
+    // the number of nodes in the entire stack 
+    // Pre-Conditions: Source stack exists  
+    // Post-Conditions: Returns and sets the amount of nodes in the stack
     int GetNumNodes() { return m_numNodes; }
     void SetNumNodes(unsigned int& num) { m_numNodes = num; }
 
+    // Name: m_numData Mutator
+    // Description: This helper function sets the total number of 
+    // items in the stack. 
+    // Pre-Conditions: Source stack exists  
+    // Post-Conditions: Sets the amount of items in the stack
     void SetNumData(unsigned int& num) { m_numData = num; }
+    // size() replaces the getter function for m_numData
 
+    // Name: m_top Accessor and Mutator
+    // Description: These are helper functions that returns and sets
+    // the top item of the stack 
+    // Pre-Conditions: Source stack exists  
+    // Post-Conditions: returns and sets the top item in the stack
     T* GetTop() { return m_top; }
     void SetTop(T& source) { *m_top = source; }
 
+    // Name: m_current_node Accessor and Mutator
+    // Description: These are helper functions that returns and sets
+    // the current nodes of the stack 
+    // Pre-Conditions: Source stack exists  
+    // Post-Conditions: returns and sets the current node in the stack
     void SetCurrentNode(LlamaNode<T, LN_SIZE>& source) { *m_current_node = source; }
     LlamaNode<T, LN_SIZE>* GetCurrentNode() { return m_current_node; }
 
-    //LlamaNode<T, LN_SIZE> GetHead() { return *m_head; }
 
 private:
     //
@@ -96,7 +117,6 @@ private:
 
             // increments the number of nodes in the stack by 1
             SetNumNodes(++m_numNodes);
-
             // Copy the array in the node 
             Copy_Arr(*source_curr, *m_head, source);
 
@@ -117,7 +137,6 @@ private:
 
             // increments the number of nodes in the stack by 1
             SetNumNodes(++m_numNodes);
-
             // Copy the array in the node 
             Copy_Arr(*source_curr, *curr_cpy, source);
 
@@ -138,7 +157,13 @@ private:
 
     }
 
-  void Copy_Arr(const LlamaNode<T, LN_SIZE>& source, LlamaNode<T, LN_SIZE>& copy, const Llama<T, LN_SIZE>& sourceStack) {
+    // Name: Copy_Arr 
+    // Description: This is a helper function that performs a deep
+    // copy of the array from the source stack to the copy stack (*this)
+    // Pre-Conditions: Source stack & node exists and passed as a parameter.
+    // Copy stack node exists and passed as a parameter
+    // Post-Conditions: Creates a deep copy of the source array to the copy array
+    void Copy_Arr(const LlamaNode<T, LN_SIZE>& source, LlamaNode<T, LN_SIZE>& copy, const Llama<T, LN_SIZE>& sourceStack) {
         int i = LN_SIZE - 1;
         // Tests if the last element from the source is in this node  
 
@@ -146,44 +171,51 @@ private:
         while (i >= 0) {
             // tests if the last element is found 
             if (sourceStack.m_top == &source.arr[i]) {
-	      // Set the values
-	      copy.arr[i] = source.arr[i];
+                // Set the values
+                copy.arr[i] = source.arr[i];
 
-              // Set the current node of the stack
-	      m_current_node = &copy;
-	      
-              // Set the top of the stack
-	      m_top = &copy.arr[i];
+                // Set the current node of the stack
+                m_current_node = &copy;
 
-	      // top is found so stack is not empty
-	      m_bottom = false;
-		
-              SetNumData(++m_numData);
-              i = 0;
+                // Set the top of the stack
+                m_top = &copy.arr[i];
+
+                // top is found so stack is not empty
+                m_bottom = false;
+
+                SetNumData(++m_numData);
+                i = 0;
             }
             else {
                 copy.arr[i] = source.arr[i];
                 SetNumData(++m_numData);
-               
+
             }
-	    i--;
+            i--;
         }
     }
+
+    // Name: IsFull 
+    // Description: This is a helper function that determines if 
+    // the array in the current node is full or not.
+    // Pre-Conditions: Stack & current nodes exist  
+    // Post-Conditions: Returns true if the array is full. Returns false 
+    // if the array is not full
     bool IsFull() {
-        if (m_top == &m_current_node->arr[0]) {
-	  return true;
-	}
+        if (m_top == &m_current_node->arr[0] && !m_bottom) {
+            return true;
+        }
         return false;
 
     }
 
-    unsigned int m_numData;
-    unsigned int m_numNodes;
-    T* m_top;
-    LlamaNode<T, LN_SIZE>* m_head;
-    LlamaNode<T, LN_SIZE>* m_current_node;
-    LlamaNode<T, LN_SIZE>* m_tail;
-    bool m_bottom;
+    unsigned int m_numData; // number of items in the stack
+    unsigned int m_numNodes; // number of nodes in the stack
+    T* m_top; // top item in the stack
+    LlamaNode<T, LN_SIZE>* m_head; // head node
+    LlamaNode<T, LN_SIZE>* m_current_node; // current node in the stack
+    LlamaNode<T, LN_SIZE>* m_tail; // last node in the stack
+    bool m_bottom; // very last item in the stack exists
 };
 
 
